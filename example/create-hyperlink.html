@@ -1,0 +1,462 @@
+<meta charset='UTF-8'>
+<title>Personal content</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+        font-family: 'Segoe UI', sans-serif;
+    }
+    *::before,
+    *::after  { box-sizing: inherit; }
+
+    html,
+    body  {
+        margin: 0;
+        padding: 1em 2em;
+        line-height: 2;
+        font-size: 100%;
+        background: rgb(248, 248, 248);
+        color: rgb(22, 22, 22);
+    }
+
+
+    form  {
+        margin: 0;
+        border: 0;
+        padding: 2em 1em;
+        background: rgb(255, 255, 255);
+        color: rgb(22, 22, 22);
+    }
+
+    fieldset  {
+        display: block;
+        margin: 0 0 1em;
+        border: 0;
+        padding: 0;
+        width: 100%;
+        height: auto;
+        line-height: 1;
+        font-size: 100%;
+    }
+
+    legend  {
+        display: block;
+        position: relative;
+        margin: 0;
+        border: 0;
+        padding: 0;
+        line-height: 1;
+        font-size: 100%;
+        font-weight: bold;
+    }
+
+    label  {
+        display: inline;
+        line-height: 1;
+        font-size: 100%;
+        background: transparent;
+        color: rgb(11, 111, 222);
+    }
+
+    input  {
+        display: block;
+        margin: 1ex 0;
+        outline: 0;
+        border-width: 2px;
+        padding: 1em;
+        width: 100%;
+        height: 3em;
+        line-height: 1;
+        font-size: 100%;
+        border-style: solid;
+        border-color: rgb(111, 111, 111);
+        color: rgb(0, 0, 0);
+    }
+    input:focus  {
+        border-color: rgb(11, 111, 222);
+        color: rgb(11, 11, 111);
+    }
+
+    textarea  {
+        display: block;
+        margin: 1ex 0;
+        outline: 0;
+        border-width: 2px;
+        padding: 1em;
+        width: 100%;
+        height: auto;
+        overflow: auto;
+        line-height: 1;
+        font-size: 100%;
+        border-style: solid;
+        border-color: rgb(111, 111, 111);
+        color: rgb(0, 0, 0);
+    }
+    textarea:focus  {
+        border-color: rgb(11, 111, 222);
+        color: rgb(11, 11, 111);
+    }
+
+    [disabled] input,
+    [disabled] textarea,
+    input[disabled],
+    textarea[disabled]  {
+        display: block;
+        margin: 0;
+        outline: 0;
+        border: 0;
+        padding: 0;
+        width: 100%;
+        line-height: inherit;
+        border-style: solid;
+        background: transparent;
+        color: rgb(22, 22, 22);
+    }
+
+    input[type='button'],
+    input[type='submit'],
+    button  {
+        display: block;
+        margin: 1ex 0;
+        outline: 0;
+        border-width: 2px;
+        border-radius: 3em;
+        padding: 1em;
+        line-height: 1;
+        font-size: 100%;
+        border-style: solid;
+        font-weight: bold;
+        border-color: rgb(11, 111, 222);
+        background: rgb(11, 111, 222);
+        color: rgb(255, 255, 255);
+        transition-duration: 0.1s;
+    }
+    button:hover {
+        background: transparent;
+        color: rgb(11, 111, 222);
+    }
+
+    a  {
+        display: inline;
+        line-height: 1;
+        font-size: 100%;
+        background: transparent;
+        color: rgb(11, 111, 222);
+    }
+
+
+    h1  {
+        display: block;
+        margin: 2em 0 1ex;
+        padding: 0;
+        line-height: 1;
+        font-size: 222%;
+        font-weight: bold;
+    }
+
+    h2  {
+        display: block;
+        margin: 2em 0 1ex;
+        padding: 0;
+        line-height: 1;
+        font-size: 111%;
+        font-weight: bold;
+    }
+
+    p  {
+        display: block;
+        margin: 1ex 0 1em;
+        padding: 0;
+    }
+
+    dl  {
+        display: block;
+        margin: 1em 0;
+        padding: 0;
+    }
+
+    dt  {
+        display: block;
+        margin: 1em 0 0;
+        padding: 0;
+        width: 100%;
+        overflow: auto;
+        font-weight: bold;
+    }
+
+    dd  {
+        display: block;
+        margin: 0 0 1em;
+        padding: 0;
+        width: 100%;
+        overflow: auto;
+        white-space: nowrap;
+    }
+
+    em  {
+        display: inline;
+        line-height: 1;
+        font-size: 100%;
+        font-weight: normal;
+        font-style: italic;
+        background: transparent;
+        color: rgb(11, 111, 222);
+    }
+
+    .data  { display: none; }
+    .send.data  { display: block; }
+    .data:target  { display: block; }
+</style>
+
+<script>
+    /*  Personal content  */;
+    (function (environ, options) {
+        'use strict';
+
+        var limiter = options.limiter;
+        var pattern = options.pattern;
+        var element = options.element;
+
+        function packing(data, meta, code) {
+            var text = '';
+            var span = '';
+            var spin = code ? 1 : -1;
+
+            data = data || '';
+            meta = meta || '';
+
+            for (var step = 0, size = ((data.length - data.length % meta.length) / meta.length) + 1; step < size; step = step + 1) {
+                span = span + meta;
+            };
+
+            for (var step = 0, size = data.length; step < size; step = step + 1) {
+                text = text + String.fromCharCode(data.charCodeAt(step) + spin * span.charCodeAt(step));
+            };
+
+            return text;
+        };
+
+        function waiting(work, time, step) {
+            var result = false;
+
+            try {
+
+                if (work() === true) {
+                    result = true;
+                } else {
+                    step = (step > 0) ? step : 0;
+
+                    if (step > 1) setTimeout(function () {waiting(work, time, step - 1)}, time);
+
+                };
+
+            } catch (error) {
+                result = false;
+            };
+
+            return result;
+        };
+
+        (function (environ) {
+            var window = environ;
+            var document = window.document;
+            var navigator = window.navigator;
+
+            waiting(
+                function () {
+                    var form = document.querySelector('#form');
+                    var result = false;
+
+                    if (form) {
+                        form.addEventListener(
+                            'submit',
+                            function (event) {
+                                var view = document.querySelector('#data');
+                                var item = {
+                                    'code': limiter,
+                                    'path': document.querySelector(element['path']).value.trim(),
+                                    'text_data': document.querySelector(element['text_data']).value.trim(),
+                                    'text_meta': document.querySelector(element['text_meta']).value.trim(),
+                                    'name_data': document.querySelector(element['name_data']).value.trim(),
+                                    'name_meta': document.querySelector(element['name_meta']).value.trim(),
+                                    'pass': document.querySelector(element['pass']).value.trim()
+                                };
+                                var html = '';
+                                var path = '';
+                                var part = {};
+                                var link = '';
+
+                                event.preventDefault();
+                                part['path'] = item['path'].trim().split('#', 1)[0].split('?', 1)[0];
+                                part['mark'] = item['path'].trim().split('?', 2)[1];
+                                part['hash'] = item['path'].trim().split('#', 2)[1];
+                                path = part['path'];
+
+                                if (part['mark']) {
+                                    part['mark'] = part['mark']
+                                        .split('#')[0]
+                                        .split('&')
+                                        .filter(
+                                            function (data) {
+                                                data = decodeURIComponent(data.split('=', 2)[0]);
+                                                if (data === item['text_meta']) return false;
+                                                if (data === item['name_meta']) return false;
+                                                if (data === item['code']) return false;
+                                                return true;
+                                            }
+                                        )
+                                        .join('&');
+                                } else {
+                                    part['mark'] = '';
+                                };
+
+                                if (part['hash']) {
+                                    part['hash'] = part['hash'].split('?', 1)[0];
+                                } else {
+                                    part['hash'] = '';
+                                };
+
+                                if (item['text_data']) {
+                                    html = item['text_data']
+                                        .trim()
+                                        .split(';')
+                                        .filter(
+                                            function (data) {
+                                                var result = true;
+
+                                                data = data.trim();
+                                                if (data === '') result = false;
+
+                                                return result;
+                                            }
+                                        )
+                                        .reduce(
+                                            function (meta, data) {
+                                                var text = data.trim();
+                                                var link = '';
+
+                                                link = path + '?' + item['code'] + '=1&' + item['text_meta'] + '=' + encodeURIComponent(packing(text, item['pass'], true));
+                                                link = (item['name_data'] === '') ? link : link + '&' + item['name_meta'] + '=' + encodeURIComponent(packing(item['name_data'], item['pass'], true));
+                                                link = (part['mark'] === '') ? link : link + '&' + part['mark'];
+                                                link = (part['hash'] === '') ? link : link + '#' + part['hash'];
+                                                meta = meta + '<dt>' + text + '</dt><dd>'+ link + '</dd>';
+
+                                                return meta;
+                                            },
+                                            ''
+                                        );
+                                } else {
+                                    link = (item['name_data'] === '') ? link : link + '&' + item['name_meta'] + '=' + encodeURIComponent(packing(item['name_data'], item['pass'], true));
+
+                                    if (link === '') {
+                                        link = path;
+                                        link = (part['mark'] === '') ? link : link + '?' + part['mark'];
+                                        link = (part['hash'] === '') ? link : link + '#' + part['hash'];
+                                        html = '<dd>' + link + '</dd>';
+                                    } else {
+                                        link = path + '?' + item['code'] + '=1' + link;
+                                        link = (part['mark'] === '') ? link : link + '&' + part['mark'];
+                                        link = (part['hash'] === '') ? link : link + '#' + part['hash'];
+                                        html = '<dd>' + link + '</dd>';
+                                    };
+
+                                };
+
+                                view.querySelector('dl').innerHTML = html;
+                                view.className = 'send data';
+                                view.scrollIntoView({ behavior: 'smooth' });
+                            }
+                        );
+
+                        result = true;
+                    };
+
+                    return result;
+                },
+                11,
+                111
+            );
+        })(environ);
+    })(
+        window,
+        {
+            'limiter': 'code',
+            'element': {
+                'view': '#data',
+                'form': '#form',
+                'path': '#path',
+                'text_data': '#text_data',
+                'text_meta': '#text_meta',
+                'name_data': '#name_data',
+                'name_meta': '#name_meta',
+                'pass': '#pass'
+            }
+        }
+    );
+</script>
+
+<div class='view'>
+    <h1>Personal hyperlink generator</h1>
+    <p>To generate hyperlinks, use the form below.</p>
+
+    <div id='meta' class='meta'>
+        <h2>Generation parameters</h2>
+
+        <form id='form' name='form' method='POST' action='#data'>
+            <fieldset>
+                <legend>
+                    <label for='path'>Page address</label>
+                </legend>
+                <input id='path' name='path' type='text' size='33' value='update.html'>
+            </fieldset>
+
+            <fieldset>
+                <legend>
+                    <label for='text_data'>Header text</label>
+                </legend>
+                <textarea id='text_data' name='text_data' rows='11' cols='33'></textarea>
+                The symbol “;” (semicolon) is used as a separator of header text variants.
+            </fieldset>
+
+            <fieldset>
+                <legend>
+                    <label for='name_data'>Customer name</label>
+                </legend>
+                <input id='name_data' name='name_data' type='text' size='33' value=''>
+                To delete this element, enter “-” (minus).
+            </fieldset>
+
+            <fieldset disabled>
+                <legend>
+                    <label for='text_meta'>GET parameter for transferring header text</label>
+                </legend>
+                <input id='text_meta' name='text_meta' type='text' size='33' value='swap_text'>
+            </fieldset>
+
+            <fieldset disabled>
+                <legend>
+                    <label for='name_meta'>GET parameter for transferring customer name</label>
+                </legend>
+                <input id='name_meta' name='name_meta' type='text' size='33' value='swap_name'>
+            </fieldset>
+
+            <fieldset disabled>
+                <legend>
+                    <label for='pass'>Encryption key</label>
+                </legend>
+                <input id='pass' name='pass' type='text' size='33' value='// Replace header on this page!'>
+            </fieldset>
+
+            <button id='send' name='send' type='submit'>Generate</button>
+        </form>
+    </div>
+
+    <div id='data' class='data'>
+        <h2>Generation result</h2>
+
+        <dl>
+            <dt>Header text</dt>
+            <dd><a href='#'>Hyperlink</a></dd>
+        </dl>
+    </div>
+</div>
